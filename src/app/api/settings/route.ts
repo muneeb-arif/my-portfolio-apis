@@ -15,7 +15,7 @@ async function getUserByDomain(domain: string) {
     AND d.status = 1
     LIMIT 1
   `;
-  
+
   const pattern = `%${domain}%`;
   const result = await executeQuery(query, [pattern]);
   console.log('🔍 Domain lookup result for settings:', result);
@@ -67,8 +67,9 @@ export async function GET(request: NextRequest) {
       const origin = request.headers.get('origin') || request.headers.get('referer');
       if (origin) {
         // Extract domain from origin/referer
-        const domain = origin.replace(/^https?:\/\//, '').split('/')[0];
-        userId = await getUserByDomain(domain);
+        // const domain = origin.replace(/^https?:\/\//, '').split('/')[0];
+
+        userId = await getUserByDomain(origin);
       }
     }
     
