@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { executeQuery } from '@/lib/database';
-import supabase, { BUCKETS, checkEnvMissing } from '@/lib/supabase';
+import { getSupabaseByDomain, extractDomainFromOrigin, BUCKETS } from '@/lib/supabaseByDomain';
 
 // Utility to get user id by domain
 async function getUserByDomain(domain: string) {
@@ -103,18 +103,13 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // Check if Supabase is configured
-    if (checkEnvMissing()) {
-      console.log('❌ Supabase environment variables missing for gallery');
-      return NextResponse.json({
-        success: true,
-        data: [],
-        demo: false
-      });
-    }
+    // Get domain-specific Supabase client
+    const origin = request.headers.get('origin') || request.headers.get('referer');
+    const domain = extractDomainFromOrigin(origin);
+    const supabase = await getSupabaseByDomain(domain);
 
     // List images from Supabase storage for this user
-    console.log('📥 Fetching gallery images for user:', userId);
+    console.log('📥 Fetching gallery images for user:', userId, 'from domain:', domain);
     const { data, error } = await supabase.storage
       .from(BUCKETS.IMAGES)
       .list(userId, {
