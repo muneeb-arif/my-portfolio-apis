@@ -2,7 +2,6 @@
 
 Next.js API server for the portfolio management system with MySQL database integration.
 
-
 ## 🚀 Quick Start
 
 ### 1. Install Dependencies
