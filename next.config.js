@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  transpilePackages: ['swagger-ui-react'],
   async headers() {
     return [
       {
