@@ -10,10 +10,6 @@ const BUCKET_PREFIX: Record<string, string> = {
   updates: 'updates',
 };
 
-function blobPutAccess(): 'public' | 'private' {
-  return String(process.env.BLOB_PUT_ACCESS || 'public').toLowerCase() === 'private' ? 'private' : 'public';
-}
-
 function sanitizeFilename(name: string): string {
   const lastDot = name.lastIndexOf('.');
   const base = lastDot !== -1 ? name.slice(0, lastDot) : name;
@@ -52,7 +48,7 @@ export const POST = withAuth(async (request: AuthenticatedRequest) => {
 
     const buf = Buffer.from(await file.arrayBuffer());
     const blob = await put(pathname, buf, {
-      access: blobPutAccess(),
+      access: 'public',
       token,
       contentType: file.type || undefined,
     });
